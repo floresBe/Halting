@@ -16,11 +16,14 @@ namespace AltadePiezas
     {
         string[] fecha;//fecha obtenida de datetimepike
         string[] c; //Ciclo obtenido de comboboxciclos
+        string horn = string.Empty;
+        int cicl;
         List<String> ciclos = new List<string>();
         cCiclo ciclo = new cCiclo();
         cLote lote = new cLote();
         cPieza pieza = new cPieza();
         cDefecto defecto = new cDefecto();
+        cParteCiclo parteCiclo = new cParteCiclo();
         DialogResult respuesta;
 
         public AltadePiezas()
@@ -339,10 +342,30 @@ namespace AltadePiezas
             }
             ciclo = null;
         }
-
+        private void dividirCiclo(string ciclo)
+        {
+            string[] datos = ciclo.Split();
+            horn = datos[0];
+            cicl = Convert.ToInt32(datos[1]);
+        }
         private void comboBoxCiclos_SelectedIndexChanged(object sender, EventArgs e)
         {
+            List<string> nosParte = null;
+            string c = comboBoxCiclos.SelectedText;
+            try
+            {
+                dividirCiclo(c);
+                nosParte = parteCiclo.obtenerNumerosPartePorCiclo(horn, cicl);
+            }
+            catch (Exception ex)
+            {
+                return;
+            }
 
+            foreach (var item in nosParte)
+            {
+                comboBox2.Items.Add(item);
+            }
         }
     }
 }
