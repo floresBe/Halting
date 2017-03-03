@@ -155,6 +155,12 @@
   <ItemGroup>
     <None Include="Resources\joniwel11.jpg" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Hornos\Hornos\Servicio\Servicio.csproj">
+      <Project>{1593cf0b-15ae-4ab0-8146-ece4ae367362}</Project>
+      <Name>Servicio</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

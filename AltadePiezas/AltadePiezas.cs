@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using Servidor;
+using Servicio;
 
 
 namespace AltadePiezas
@@ -20,7 +20,7 @@ namespace AltadePiezas
         cCiclo ciclo = new cCiclo();
         cLote lote = new cLote();
         cPieza pieza = new cPieza();
-        cDefecto defecto = new Servidor.cDefecto();
+        cDefecto defecto = new cDefecto();
         DialogResult respuesta;
 
         public AltadePiezas()
@@ -29,24 +29,7 @@ namespace AltadePiezas
         }
         private void dateTimePicker1_ValueChanged(object sender, EventArgs e)
         {
-            fecha = dateTimePicker.Value.ToString().Split();
-            labelFecha.Text = fecha[0];
-            ciclos = ciclo.obtenerPorFecha(fecha[0]);
-            if (ciclos.Count() == 0 || ciclos == null)
-            {
-                MessageBox.Show("No Existen ciclos en la fecha seleccionada.");
-                comboBoxCiclos.Enabled = false;
-                return;
-            }
-            else
-            {
-                comboBoxCiclos.Enabled = true;
-                comboBoxCiclos.Items.Clear();
-                foreach (string ciclo in ciclos)
-                {
-                    comboBoxCiclos.Items.Add(ciclo);
-                }
-            }
+            llenarCiclos();
         }
         private void radioButton2_CheckedChanged(object sender, EventArgs e)
         {
@@ -166,8 +149,8 @@ namespace AltadePiezas
                     //}
                     //else
                     //{
-                        this.Close();
-                   // }
+                    this.Close();
+                    // }
                 }
             }
         }
@@ -282,7 +265,7 @@ namespace AltadePiezas
             List<string> defectos = new List<string>();
 
             defectos = defecto.ObtenerTodos();
-            if (defectos.Count != 0 && defectos!= null)
+            if (defectos.Count != 0 && defectos != null)
             {
                 foreach (var item in defectos)
                 {
@@ -294,6 +277,72 @@ namespace AltadePiezas
         private void button2_Click(object sender, EventArgs e)
         {
             this.Close();
+        }
+
+        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            llenarCiclos();
+        }
+        private void llenarCiclos()
+        {
+            ciclo = new cCiclo();
+            string horno = string.Empty;
+            int h = 0;
+            try
+            {
+                h = comboBox1.SelectedIndex;
+                switch (h)
+                {
+                    case 0:
+                        horno = "A";
+                        break;
+                    case 1:
+                        horno = "I";
+                        break;
+                    case 2:
+                        horno = "H";
+                        break;
+                    default:
+                        break;
+                }
+            }
+            catch (Exception ex)
+            {
+                //No selecciono horno
+                return;
+            }
+            try
+            {
+                fecha = dateTimePicker.Value.ToString().Split();
+                labelFecha.Text = fecha[0];
+            }
+            catch
+            {
+                //No selecciono fecha
+                return;
+            }
+            ciclos = ciclo.obtenerPorHornoyFecha(horno, fecha[0]);
+            if (ciclos.Count() == 0 || ciclos == null)
+            {
+                MessageBox.Show("No Existen ciclos con los datos selccionados.");
+                comboBoxCiclos.Enabled = false;
+                return;
+            }
+            else
+            {
+                comboBoxCiclos.Enabled = true;
+                comboBoxCiclos.Items.Clear();
+                foreach (string ciclo in ciclos)
+                {
+                    comboBoxCiclos.Items.Add(ciclo);
+                }
+            }
+            ciclo = null;
+        }
+
+        private void comboBoxCiclos_SelectedIndexChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }
